@@ -3,7 +3,7 @@
     - Fills out a template filled with {{name}} variables using a hash table
 .description
     - Template should be formatted as a string, with {{<VariableName>}} used as the tokens to replace
-    - Replacements should be in a hash table as {{<VariableName>}} = ReplacementValue
+    - Replacements should be in a hash table as <VariableName> = ReplacementValue
 .example
     - Fill-Template -Template "simple {{Type}} but could be a here-string" -Variables @{'Type' = 'string'}
     - returns: simple string but could be a here-string 
