@@ -1,4 +1,4 @@
-Import-Module "..\PSTemplate" -Force -DisableNameChecking
+Import-Module "$PSScriptRoot\..\PSTemplate" -Force -DisableNameChecking
 
 #region----------TEST DATA
 
@@ -27,33 +27,64 @@ line 2: {{Token2}}
 "@
 
     $SingleLineStringTemplate = "Token 1: {{Token1}}; Token 2: {{Token2}}"
-
     $SingleLineStringFullyFilled = "Token 1: Value1; Token 2: Value2"
-
     $SingleLineStringLessFilled = "Token 1: Value1; Token 2: {{Token2}}"
-    
+
+    $MultiLineTextFileTemplate = Get-Content "$PSScriptRoot\MultilineTextFile.template"
+    $MultiLineTextFileFullyFilled = Get-Content "$PSScriptRoot\MultilineTextFile.FullyFilled"
+    $MultiLineTextFileLessFilled = Get-Content "$PSScriptRoot\MultilineTextFile.LessFilled"
+        
 #endregion-------
 
 #region----------TESTS
 
 Describe "Fill-Template" {
 
-    It "replaces all {{<>}} tokens in a single multi-line string with values in a hash table that contains all tokens as keys" {
-        Fill-Template -Template $MultilineStringTemplate -Variables $HashTableWithAllKeys | Should Be $MultilineStringFullyFilled
-    }
+    Context "Multi-line string" {
 
-    It "replaces some {{<>}} tokens in a single multi-line string with values in a hash table that contains some tokens as keys" {
-        Fill-Template -Template $MultilineStringTemplate -Variables $HashTableWithLessKeys | Should Be $MultilineStringLessFilled
-    }
-
-    It "replaces all {{<>}} tokens in a single single-line string with values in a hash table that contains all tokens as keys" {
-        Fill-Template -Template $SingleLineStringTemplate -Variables $HashTableWithAllKeys | Should Be $SingleLineStringFullyFilled
-    }
-
-    It "replaces some {{<>}} tokens in a single single-line string with values in a hash table that contains some tokens as keys" {
-        Fill-Template -Template $SingleLineStringTemplate -Variables $HashTableWithLessKeys | Should Be $SingleLineStringLessFilled
-    }
+        It "replaces all {{<>}} tokens in a single multi-line string with values in a hash table that contains all tokens as keys" {
+            Fill-Template -Template $MultilineStringTemplate -Variables $HashTableWithAllKeys | Should Be $MultilineStringFullyFilled
+        }
     
+        It "replaces some {{<>}} tokens in a single multi-line string with values in a hash table that contains some tokens as keys" {
+            Fill-Template -Template $MultilineStringTemplate -Variables $HashTableWithLessKeys | Should Be $MultilineStringLessFilled
+        }
+
+        It "returns an array of the same size as the input" {
+            (Fill-Template -Template $MultilineStringTemplate -Variables $HashTableWithAllKeys).Count | Should Be $MultilineStringTemplate.Count
+        }
+    }
+
+    Context "Single-line string"{
+
+        It "replaces all {{<>}} tokens in a single single-line string with values in a hash table that contains all tokens as keys" {
+            Fill-Template -Template $SingleLineStringTemplate -Variables $HashTableWithAllKeys | Should Be $SingleLineStringFullyFilled
+        }
+
+        It "replaces some {{<>}} tokens in a single single-line string with values in a hash table that contains some tokens as keys" {
+            Fill-Template -Template $SingleLineStringTemplate -Variables $HashTableWithLessKeys | Should Be $SingleLineStringLessFilled
+        }
+
+        It "returns an array of the same size as the input" {
+            (Fill-Template -Template $SingleLineStringTemplate -Variables $HashTableWithAllKeys).Count | Should Be $SingleLineStringFullyFilled.Count
+        }
+    }
+
+    Context "Multi-line text file" {
+
+        It "replaces all {{<>}} tokens in a single multi-line text file with values in a hash table that contains all tokens as keys" {
+            Fill-Template -Template $MultiLineTextFileTemplate -Variables $HashTableWithAllKeys | Should Be $MultiLineTextFileFullyFilled
+        }
+    
+        It "replaces some {{<>}} tokens in a single multi-line text file with values in a hash table that contains some tokens as keys" {
+            Fill-Template -Template $MultiLineTextFileTemplate -Variables $HashTableWithLessKeys | Should Be $MultiLineTextFileLessFilled
+        }
+        
+        It "returns an array of the same size as the input" {
+            (Fill-Template -Template $MultiLineTextFileTemplate -Variables $HashTableWithAllKeys).Count | Should Be $MultiLineTextFileTemplate.Count
+        }
+    }
+
 } 
 
 #endregion-------

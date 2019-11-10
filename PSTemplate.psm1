@@ -22,15 +22,29 @@ function Fill-Template
 {
     Param
     (
-        [Parameter(Position=0,Mandatory=$true,ValueFromPipeline=$true)][string]$Template,
+        [Parameter(Position=0,Mandatory=$true,ValueFromPipeline=$true)][string[]]$Template,
         [Parameter(Position=1,Mandatory=$true)][System.Collections.IDictionary]$Variables
     )
 
-    $Return = $Template
-
-    $Variables.GetEnumerator() | Select-Object Name,Value | ForEach-Object {
-        $Return = $Return.Replace("{{$($_.Name)}}",$_.Value)
+    Begin
+    {
+        # don't join anything: we want to return the output in the same form as the input
     }
 
-    return $Return
+    Process
+    {
+        $Return = $Template
+
+        $Variables.GetEnumerator() | Select-Object Name,Value | ForEach-Object {
+            $Return = $Return.Replace("{{$($_.Name)}}",$_.Value)
+        }
+    
+        return $Return    
+    }
+
+    End
+    {
+
+    }
+
 }
