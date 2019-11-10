@@ -1,35 +1,40 @@
 Import-Module "..\PSTemplate" -Force -DisableNameChecking
 
-$MultilineStringTemplate = @"
+#region----------TEST DATA
+
+    $MultilineStringTemplate = @"
 line 1: {{Token1}}
 line 2: {{Token2}}
 "@
 
-$HashTableWithAllKeys = @{
-    Token1 = "Value1"
-    Token2 = "Value2"
-}
+    $HashTableWithAllKeys = @{
+        Token1 = "Value1"
+        Token2 = "Value2"
+    }
 
-$MultilineStringFullyFilled = @"
+    $MultilineStringFullyFilled = @"
 line 1: Value1
 line 2: Value2
 "@
 
-$HashTableWithLessKeys = @{
-    Token1 = "Value1"
-}
+    $HashTableWithLessKeys = @{
+        Token1 = "Value1"
+    }
 
-$MultilineStringLessFilled = @"
+    $MultilineStringLessFilled = @"
 line 1: Value1
 line 2: {{Token2}}
 "@
 
-$SingleLineStringTemplate = "Token 1: {{Token1}}; Token 2: {{Token2}}"
+    $SingleLineStringTemplate = "Token 1: {{Token1}}; Token 2: {{Token2}}"
 
-$SingleLineStringFullyFilled = "Token 1: Value1; Token 2: Value2"
+    $SingleLineStringFullyFilled = "Token 1: Value1; Token 2: Value2"
 
-$SingleLineStringLessFilled = "Token 1: Value1; Token 2: {{Token2}}"
+    $SingleLineStringLessFilled = "Token 1: Value1; Token 2: {{Token2}}"
+    
+#endregion-------
 
+#region----------TESTS
 
 Describe "Fill-Template" {
 
@@ -48,5 +53,7 @@ Describe "Fill-Template" {
     It "replaces some {{<>}} tokens in a single single-line string with values in a hash table that contains some tokens as keys" {
         Fill-Template -Template $SingleLineStringTemplate -Variables $HashTableWithLessKeys | Should Be $SingleLineStringLessFilled
     }
+    
+} 
 
-}
+#endregion-------
