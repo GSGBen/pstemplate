@@ -38,53 +38,65 @@ line 2: {{Token2}}
 
 #region----------TESTS
 
-Describe "Fill-Template" {
+Describe "Invoke-PSTemplate" {
 
     Context "Multi-line string" {
 
         It "replaces all {{<>}} tokens in a single multi-line string with values in a hash table that contains all tokens as keys" {
-            Fill-Template -Template $MultilineStringTemplate -Variables $HashTableWithAllKeys | Should Be $MultilineStringFullyFilled
+            Invoke-PSTemplate -Template $MultilineStringTemplate -Variables $HashTableWithAllKeys | Should Be $MultilineStringFullyFilled
         }
     
         It "replaces some {{<>}} tokens in a single multi-line string with values in a hash table that contains some tokens as keys" {
-            Fill-Template -Template $MultilineStringTemplate -Variables $HashTableWithLessKeys | Should Be $MultilineStringLessFilled
+            Invoke-PSTemplate -Template $MultilineStringTemplate -Variables $HashTableWithLessKeys | Should Be $MultilineStringLessFilled
         }
 
         It "returns an array of the same size as the input" {
-            (Fill-Template -Template $MultilineStringTemplate -Variables $HashTableWithAllKeys).Count | Should Be $MultilineStringTemplate.Count
+            (Invoke-PSTemplate -Template $MultilineStringTemplate -Variables $HashTableWithAllKeys).Count | Should Be $MultilineStringTemplate.Count
         }
     }
 
     Context "Single-line string"{
 
         It "replaces all {{<>}} tokens in a single single-line string with values in a hash table that contains all tokens as keys" {
-            Fill-Template -Template $SingleLineStringTemplate -Variables $HashTableWithAllKeys | Should Be $SingleLineStringFullyFilled
+            Invoke-PSTemplate -Template $SingleLineStringTemplate -Variables $HashTableWithAllKeys | Should Be $SingleLineStringFullyFilled
         }
 
         It "replaces some {{<>}} tokens in a single single-line string with values in a hash table that contains some tokens as keys" {
-            Fill-Template -Template $SingleLineStringTemplate -Variables $HashTableWithLessKeys | Should Be $SingleLineStringLessFilled
+            Invoke-PSTemplate -Template $SingleLineStringTemplate -Variables $HashTableWithLessKeys | Should Be $SingleLineStringLessFilled
         }
 
         It "returns an array of the same size as the input" {
-            (Fill-Template -Template $SingleLineStringTemplate -Variables $HashTableWithAllKeys).Count | Should Be $SingleLineStringFullyFilled.Count
+            (Invoke-PSTemplate -Template $SingleLineStringTemplate -Variables $HashTableWithAllKeys).Count | Should Be $SingleLineStringFullyFilled.Count
         }
     }
 
     Context "Multi-line text file" {
 
         It "replaces all {{<>}} tokens in a single multi-line text file with values in a hash table that contains all tokens as keys" {
-            Fill-Template -Template $MultiLineTextFileTemplate -Variables $HashTableWithAllKeys | Should Be $MultiLineTextFileFullyFilled
+            Invoke-PSTemplate -Template $MultiLineTextFileTemplate -Variables $HashTableWithAllKeys | Should Be $MultiLineTextFileFullyFilled
         }
     
         It "replaces some {{<>}} tokens in a single multi-line text file with values in a hash table that contains some tokens as keys" {
-            Fill-Template -Template $MultiLineTextFileTemplate -Variables $HashTableWithLessKeys | Should Be $MultiLineTextFileLessFilled
+            Invoke-PSTemplate -Template $MultiLineTextFileTemplate -Variables $HashTableWithLessKeys | Should Be $MultiLineTextFileLessFilled
         }
         
         It "returns an array of the same size as the input" {
-            (Fill-Template -Template $MultiLineTextFileTemplate -Variables $HashTableWithAllKeys).Count | Should Be $MultiLineTextFileTemplate.Count
+            (Invoke-PSTemplate -Template $MultiLineTextFileTemplate -Variables $HashTableWithAllKeys).Count | Should Be $MultiLineTextFileTemplate.Count
         }
     }
 
 } 
+
+Describe "Fill-Template" {
+
+    It "is an alias of Invoke-PSTemplate" {
+        (get-alias -Name "Fill-Template").ReferencedCommand.Name | Should Be "Invoke-PSTemplate"
+    }
+
+    It "has the same functionality as Invoke-PSTemplate (replaces all {{<>}} tokens in a single multi-line string with values in a hash table that contains all tokens as keys)" {
+        Fill-Template -Template $MultilineStringTemplate -Variables $HashTableWithAllKeys | Should Be $MultilineStringFullyFilled
+    }
+
+}
 
 #endregion-------

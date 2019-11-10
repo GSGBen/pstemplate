@@ -18,7 +18,7 @@
     Email: ben@goldensyrupgames.com
     From: https://github.com/GSGBen/PSTemplate
 #>
-function Fill-Template
+function Invoke-PSTemplate
 {
     Param
     (
@@ -48,3 +48,5 @@ function Fill-Template
     }
 
 }
+
+New-Alias -Name Fill-Template -Value Invoke-PSTemplate
