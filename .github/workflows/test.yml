@@ -1,0 +1,14 @@
+name: CI
+
+on: [push]
+
+jobs:
+  test:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Run tests
+      shell: powershell
+      run: Invoke-Pester
