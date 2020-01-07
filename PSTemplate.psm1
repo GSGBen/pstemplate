@@ -22,7 +22,7 @@ function Invoke-PSTemplate
 {
     Param
     (
-        [Parameter(Position=0,Mandatory=$true,ValueFromPipeline=$true)][string[]]$Template,
+        [Parameter(Position=0,ValueFromPipeline=$true)][string[]]$Template,
         [Parameter(Position=1,Mandatory=$true)][System.Collections.IDictionary]$Variables
     )
 
@@ -36,7 +36,11 @@ function Invoke-PSTemplate
         $Return = $Template
 
         $Variables.GetEnumerator() | Select-Object Name,Value | ForEach-Object {
-            $Return = $Return.Replace("{{$($_.Name)}}",$_.Value)
+            # this allows "" to go through, but doesn't throw on a fully missing $Template
+            if ($null -ne $Return)
+            {
+                $Return = $Return.Replace("{{$($_.Name)}}",$_.Value)
+            }
         }
     
         return $Return    
